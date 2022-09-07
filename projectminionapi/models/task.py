@@ -2,7 +2,7 @@ from django.db import models
 from projectminionapi.models.projects import Project
 
 
-class Task (models.model):
+class Task (models.Model):
     """Represents a task for a project"""
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

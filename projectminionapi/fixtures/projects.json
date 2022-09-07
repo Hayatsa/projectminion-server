@@ -1,0 +1,12 @@
+[
+    {
+        "model": "projectminionapi.project",
+        "pk": 1,
+        "fields": {
+            "creator": 1,
+            "title": "make ERD",
+            "description": "sadasdas",
+            "date": "2022-10-02"
+        }
+    }
+]
