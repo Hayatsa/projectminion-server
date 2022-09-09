@@ -1,6 +1,5 @@
 """view module for handling requests about tasks"""
 from django.http import HttpResponseServerError
-from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -43,12 +42,12 @@ class TaskView(ViewSet):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('id', 'project', 'title', 'date', 'note', 'user_id')
+        fields = ('id', 'project', 'title', 'date', 'note')
         depth = 1
 
 
 class CreateTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'project', 'title', 'date', 'note']
+        fields = ('id', 'project', 'title', 'date', 'note')
         

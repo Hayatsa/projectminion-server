@@ -1,6 +1,5 @@
 """view module for handling requests about projects"""
 from django.http import HttpResponseServerError
-from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -53,12 +52,12 @@ class ProjectView(ViewSet):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'creator', 'title', 'description', 'date', 'user_id')
-        depth = 1
+        fields = ('id', 'creator', 'title', 'description', 'date', 'users')
+       
 
 
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'creator', 'title', 'description', 'date']
+        fields = ('id', 'creator', 'title', 'description', 'date', 'users')
         
