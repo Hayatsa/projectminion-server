@@ -1,10 +1,10 @@
 """view module for handling requests about projects"""
-from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from projectminionapi.models import Project
+
 
 
 
@@ -20,12 +20,15 @@ class ProjectView(ViewSet):
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
     
+    
     def create(self, request):
-        project = Project.objects.get(user=request.auth.user)
+        creator = request.auth.user
         serializer = CreateProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(project=project)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer.save(creator=creator)
+        project = Project.objects.get(pk=serializer.data["id"])
+        response_serializer = ProjectSerializer(project)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
         project = Project.objects.get(pk=pk)
@@ -39,12 +42,12 @@ class ProjectView(ViewSet):
         project.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    @action(methods=['post'], detail=True)
-    def signup(self, request, pk):
-        user = request.auth.user
-        project = Project.objects.get(pk=pk)
-        project.users.add(user)
-        return Response({'message': 'User added'}, status=status.HTTP_201_CREATED)
+    # @action(methods=['post'], detail=True)
+    # def signup(self, request, pk):
+    #     user = request.auth.user
+    #     project = Project.objects.get(pk=pk)
+    #     project.users.add(user)
+    #     return Response({'message': 'User added'}, status=status.HTTP_201_CREATED)
     
 
         
@@ -53,11 +56,16 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('id', 'creator', 'title', 'description', 'date', 'users')
-       
-
+        
 
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'creator', 'title', 'description', 'date', 'users')
+        fields = ('id', 'title', 'description', 'date')
+
+
+# if projects:
+#             for id in projects:
+#                 user_projects = User.objects.get(pk=id)
+#                 project.projects.add(user_projects)
         
