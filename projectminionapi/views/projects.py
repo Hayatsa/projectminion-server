@@ -1,11 +1,10 @@
 """view module for handling requests about projects"""
-from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from projectminionapi.models import Project
-from django.contrib.auth.models import User
+
 
 
 
@@ -21,20 +20,15 @@ class ProjectView(ViewSet):
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
     
+    
     def create(self, request):
-        creator = User.objects.get(user=request.auth.user)
-        projects = request.data.get("projects")
-        if projects:
-            del request.data["projects"]
+        creator = request.auth.user
         serializer = CreateProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(creator=creator)
         project = Project.objects.get(pk=serializer.data["id"])
-        if projects:
-            for id in projects:
-                user_projects = User.objects.get(pk=id)
-                project.projects.add(user_projects)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        response_serializer = ProjectSerializer(project)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
         project = Project.objects.get(pk=pk)
@@ -67,5 +61,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'creator', 'title', 'description', 'date', 'users')
+        fields = ('id', 'title', 'description', 'date')
+
+
+# if projects:
+#             for id in projects:
+#                 user_projects = User.objects.get(pk=id)
+#                 project.projects.add(user_projects)
         
