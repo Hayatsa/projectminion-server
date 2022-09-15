@@ -44,7 +44,6 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'project', 'title', 'date', 'note')
-        depth = 1
 
 
 class CreateTaskSerializer(serializers.ModelSerializer):

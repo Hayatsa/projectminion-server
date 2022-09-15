@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from projectminionapi.models import Project
+from projectminionapi.models.task import Task
 
 
 
@@ -50,12 +51,16 @@ class ProjectView(ViewSet):
     #     return Response({'message': 'User added'}, status=status.HTTP_201_CREATED)
     
 
-        
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('id', 'project', 'title', 'date', 'note')
     
 class ProjectSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True)
     class Meta:
         model = Project
-        fields = ('id', 'creator', 'title', 'description', 'date', 'users')
+        fields = ('id', 'creator', 'title', 'description', 'date', 'users', 'tasks')
         
 
 class CreateProjectSerializer(serializers.ModelSerializer):
