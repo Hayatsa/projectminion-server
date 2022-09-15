@@ -54,7 +54,7 @@ class ProjectView(ViewSet):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('title', 'date', 'note')
+        fields = ('id', 'project', 'title', 'date', 'note')
     
 class ProjectSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True)
