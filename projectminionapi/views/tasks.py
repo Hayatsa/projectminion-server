@@ -2,6 +2,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from tomlkit import date
 from projectminionapi.models import Task
 from projectminionapi.models import Project
 
@@ -16,6 +17,7 @@ class TaskView(ViewSet):
 
     def list(self, request):
         tasks = Task.objects.all()
+        # task_list = tasks.filter(date=date.today())
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
     

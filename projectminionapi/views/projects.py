@@ -43,12 +43,6 @@ class ProjectView(ViewSet):
         project.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    # @action(methods=['post'], detail=True)
-    # def signup(self, request, pk):
-    #     user = request.auth.user
-    #     project = Project.objects.get(pk=pk)
-    #     project.users.add(user)
-    #     return Response({'message': 'User added'}, status=status.HTTP_201_CREATED)
     
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -61,7 +55,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('id', 'creator', 'title', 'description', 'date', 'users', 'tasks')
-        
+        depth = 1
 
 class CreateProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,8 +63,5 @@ class CreateProjectSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'date')
 
 
-# if projects:
-#             for id in projects:
-#                 user_projects = User.objects.get(pk=id)
-#                 project.projects.add(user_projects)
+
         
